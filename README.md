@@ -190,7 +190,7 @@ API Contract:
 
 Contributions are welcome.
 
-Please read **CONTRIBUTING.md** before submitting issues or pull requests.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting issues or pull requests.
 
 ---
 
