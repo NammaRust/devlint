@@ -1,3 +1,5 @@
+mod env_validator;
+
 fn main() {
-    println!("Welcome to DevLint! This is a placeholder for the main functionality of the application.");
+    println!("issue 4!!!");
 }
