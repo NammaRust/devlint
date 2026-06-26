@@ -5,6 +5,7 @@ use std::fs;
 use std::io;
 
 
+
 pub fn extract_env_variables(source: &str) -> Vec<String> {
     let mut vars = HashSet::new();
 
@@ -54,4 +55,32 @@ pub fn parse_env_file(path: &str) -> io::Result<HashMap<String, String>> {
     }
 
     Ok(vars)
+}
+
+pub fn validate_env(
+    extracted: &[String],
+    env: &HashMap<String, String>,
+) {
+    println!("Validation Report");
+
+    println!("\nMissing Variables:");
+    for var in extracted {
+        if !env.contains_key(var) {
+            println!("- {}", var);
+        }
+    }
+
+    println!("\nUnused Variables:");
+    for key in env.keys() {
+        if !extracted.contains(key) {
+            println!("- {}", key);
+        }
+    }
+
+    println!("\nEmpty Variables:");
+    for (key, value) in env {
+        if value.trim().is_empty() {
+            println!("- {}", key);
+        }
+    }
 }
