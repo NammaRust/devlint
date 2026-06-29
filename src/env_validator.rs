@@ -1,5 +1,9 @@
 use regex::Regex;
 use std::collections::HashSet;
+use std::collections::HashMap;
+use std::fs;
+use std::io;
+
 
 
 pub fn extract_env_variables(source: &str) -> Vec<String> {
@@ -29,4 +33,54 @@ pub fn extract_env_variables(source: &str) -> Vec<String> {
     let mut result: Vec<String> = vars.into_iter().collect();
     result.sort();
     result
+}
+
+pub fn parse_env_file(path: &str) -> io::Result<HashMap<String, String>> {
+    let content = fs::read_to_string(path)?;
+    let mut vars = HashMap::new();
+
+    for line in content.lines() {
+        let line = line.trim();
+
+        if line.is_empty() || line.starts_with('#') {
+            continue;
+        }
+
+        if let Some((key, value)) = line.split_once('=') {
+            vars.insert(
+                key.trim().to_string(),
+                value.trim().to_string(),
+            );
+        }
+    }
+
+    Ok(vars)
+}
+
+pub fn validate_env(
+    extracted: &[String],
+    env: &HashMap<String, String>,
+) {
+    println!("Validation Report");
+
+    println!("\nMissing Variables:");
+    for var in extracted {
+        if !env.contains_key(var) {
+            println!("- {}", var);
+        }
+    }
+
+    println!("\nUnused Variables:");
+    for key in env.keys() {
+        if !extracted.contains(key) {
+            println!("- {}", key);
+        }
+    }
+
+    println!("\nEmpty Variables:");
+    for (key, value) in env {
+        if value.trim().is_empty() {
+            println!("- {}", key);
+        }
+    }
 }
